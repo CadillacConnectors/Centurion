@@ -48,8 +48,6 @@ public class OI {
     Button fatOut = new JoystickButton(JoySpecial, 3);
     Button fatIn = new JoystickButton(JoySpecial, 2);
     Button superSanikSpedActivate = new JoystickButton(JoyDrive, 1);
-    Button changeToMain = new JoystickButton(JoyDrive, 3);
-    Button changeToAlt = new JoystickButton(JoyDrive, 4);
     
     public OI() {
         shooter.whenPressed(new ShootMe(true));

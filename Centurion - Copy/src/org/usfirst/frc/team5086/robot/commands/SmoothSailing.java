@@ -12,6 +12,12 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class SmoothSailing extends CommandGroup {
 
     public SmoothSailing() {
+    	//Reset
+    	addSequential(new ChangeTheFattie(false), .01);
+    	addSequential(new EveryBodiesBucketsGoUp(false), .01);
+    	addSequential(new Forward(0), .1);
+    	
+    	//Actual Stuff
     	addSequential(new ChangeTheFattie(true),.01);
         addSequential(new Forward(0), .5);
         addSequential(new Forward(-.5), .25);

@@ -35,6 +35,9 @@ public class RobotMap {
 		public static double controllerDeadZoneArea = .2;
 		public static double triggerRequirement = .5;
 		public static double loadSpeed = .35;
+		public static boolean turning = false;
+		public static double leftDecrease = 1;
+		public static double rightDecrease = 1;
 		
 		public static int timesIveWantedToKillMySelfWhileCodeingThis = 8;
 }

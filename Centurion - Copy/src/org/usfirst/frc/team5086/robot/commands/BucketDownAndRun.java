@@ -14,6 +14,12 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class BucketDownAndRun extends CommandGroup {
 
     public BucketDownAndRun() {
+    	//Reset
+    	addSequential(new ChangeTheFattie(false), .01);
+    	addSequential(new EveryBodiesBucketsGoUp(false), .01);
+    	addSequential(new Forward(0), .1);
+    	
+    	//Actual Sequence
     	addSequential(new ChangeTheFattie(true),.01);
         addSequential(new Forward(0), 2);
         addSequential(new Forward(.5), .25);
@@ -22,7 +28,8 @@ public class BucketDownAndRun extends CommandGroup {
         addSequential(new Forward(0), 2);
     	addSequential(new ChangeTheFattie(false),.01);
         addSequential(new EveryBodiesBucketsGoUp(false), 0.1);
-        addSequential(new Forward(.3), 4);
+        addSequential(new Forward(.5), 4);
+        addSequential(new Forward(0), 0.01);
     }
     
 }

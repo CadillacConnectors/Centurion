@@ -50,9 +50,9 @@ public class Robot extends IterativeRobot {
     	
     	//Lights ... Camera ... Action
 		server = CameraServer.getInstance();
-        server.setQuality(100);
+        server.setQuality(10);
         server.startAutomaticCapture("cam0");
-        //a = new AxisCamera("cam1");
+        //a = new AxisCamera("cam2");
         
         //Autonomous
         chooser = new SendableChooser();
@@ -107,7 +107,9 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
-        
+
+        System.err.println("L:" + Robot.DriveSystem.getLeft());
+        System.err.println("R:" + Robot.DriveSystem.getRight());
     }
 
     public void teleopInit() {
@@ -124,6 +126,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        DriveSystem.calculateReduction();
         //This Code will make us irWIN.
         
         double leftTrigger = Robot.oi.JoySpecial.getRawAxis(2);
@@ -156,9 +159,14 @@ public class Robot extends IterativeRobot {
         	Robot.DriveSystem.hardTurn(rightMoveX);
         }
         if ((Math.abs(leftMoveY) < deadZone) && (Math.abs(rightMoveX) < deadZone)) {
-        	Robot.DriveSystem.stop();
+        	Robot.DriveSystem.mainDrive(0,0);
         }
         
+        
+        //System.err.println("L:" + Robot.DriveSystem.getLeft());
+        //System.err.println("R:" + Robot.DriveSystem.getRight());
+        
+        //System.err.println(ArmSubsystem.getAltitude());
     }
     
     /**

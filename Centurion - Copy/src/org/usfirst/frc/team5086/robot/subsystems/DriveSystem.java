@@ -19,7 +19,8 @@ public class DriveSystem extends Subsystem {
     
     }
     
-    public void turn(double Yaxis, double Xaxis) {
+    /*public void turn(double Yaxis, double Xaxis) {
+    	RobotMap.turning = true;
     	if (Xaxis < 0) {
         	LeftDrive.set(-Yaxis*driftReduction);
         	RightDrive.set(-Yaxis);
@@ -28,7 +29,7 @@ public class DriveSystem extends Subsystem {
     		LeftDrive.set(-Yaxis);
         	RightDrive.set(-Yaxis*driftReduction);
     	}
-    }
+    }*/
     
     public void mainDrive(double Yaxis, double Xaxis) {
     	double endMovementLeft = Yaxis;
@@ -39,7 +40,7 @@ public class DriveSystem extends Subsystem {
     	if (Xaxis < 0) {
     		endMovementLeft = (Yaxis*(1+(Xaxis*driftReduction)));
     	}
-    	if (endMovementLeft > 0) {
+    	if (endMovementLeft < 0) {
     		LeftDrive.set(-endMovementLeft);
     		RightDrive.set(endMovementRight);
     	}
@@ -47,28 +48,93 @@ public class DriveSystem extends Subsystem {
     		LeftDrive.set(-endMovementLeft*.75);
     		RightDrive.set(endMovementRight*.75);
     	}
+    	
+    	if (Math.abs(Xaxis) < RobotMap.controllerDeadZoneArea) {
+    		RobotMap.turning = false;
+    	}
+    	else {
+    		RobotMap.turning = true;
+    	}
     }
     
     public void hardTurn(double Xaxis) {
     	LeftDrive.set(Xaxis*turnReduction);
     	RightDrive.set(Xaxis*turnReduction);
+    	RobotMap.turning = true;
     }
     
     public void forward(double speed) {
-        LeftDrive.set(-speed);
-        RightDrive.set(speed);
-    }
-        
-    public void stop() {
-        LeftDrive.set(0);
-        RightDrive.set(0);
+        LeftDrive.set(-speed*RobotMap.leftDecrease);
+        RightDrive.set(speed*RobotMap.rightDecrease);
+        RobotMap.turning = false;
     }
     
     public void turbo() {
     	currentSpeed = RightDrive.get();
     	if (currentSpeed < -.3) {
-    		LeftDrive.set(1);
-    		RightDrive.set(-1);
+    		LeftDrive.set(1*RobotMap.leftDecrease);
+    		RightDrive.set(-1*RobotMap.rightDecrease);
+    	}
+    	RobotMap.turning = false;
+    }
+    
+    public double getLeft() {
+    	return -LeftDrive.get();
+    }
+    
+    public double getRight() {
+    	return RightDrive.get();
+    }
+    
+    public void calculateReduction() {
+    	if (RobotMap.turning = false) {
+    		double leftSpeed = this.getLeft();
+    		double rightSpeed = this.getRight();
+    		
+    		if ((leftSpeed < .99) && (rightSpeed < .99)) {
+    			RobotMap.leftDecrease=RobotMap.leftDecrease+.01;
+    			RobotMap.rightDecrease=RobotMap.rightDecrease+.01;
+    		}
+    		
+    		if ((leftSpeed - rightSpeed) > .01) {
+    			
+    			if (RobotMap.rightDecrease <= .09) {
+        			RobotMap.leftDecrease = RobotMap.leftDecrease-.01;
+    			}
+    			else {
+        			RobotMap.rightDecrease = RobotMap.rightDecrease+.01;
+    			}
+    		}
+    		
+    		if ((rightSpeed - leftSpeed) > .01) {
+    			
+    			if (RobotMap.leftDecrease <= .09) {
+        			RobotMap.rightDecrease = RobotMap.rightDecrease-.01;
+    			}
+    			else {
+        			RobotMap.leftDecrease = RobotMap.leftDecrease+.01;
+    			}
+    		}
+    		
+    		if ((leftSpeed - rightSpeed) > .001) {
+    			
+    			if (RobotMap.rightDecrease == 1) {
+        			RobotMap.leftDecrease = RobotMap.leftDecrease-.001;
+    			}
+    			else {
+        			RobotMap.rightDecrease = RobotMap.rightDecrease+.001;
+    			}
+    		}
+    		
+    		if ((rightSpeed - leftSpeed) > .001) {
+    			
+    			if (RobotMap.leftDecrease == 1) {
+        			RobotMap.rightDecrease = RobotMap.rightDecrease-.001;
+    			}
+    			else {
+        			RobotMap.leftDecrease = RobotMap.leftDecrease+.001;
+    			}
+    		}
     	}
     }
 }
